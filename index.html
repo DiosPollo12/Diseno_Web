@@ -2,803 +2,264 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Halcon Express | Construction Materials · Delivery & Pickup</title>
-  <!-- Leaflet CSS + JS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halcon Express</title>
+
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
     }
+
     body {
-      background: #eef2f5;
-      padding: 28px 24px;
+      background: #0f172a;
+      padding: 25px;
+      color: #e2e8f0;
     }
+
     .dashboard {
-      max-width: 1500px;
-      margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
-      gap: 32px;
-      margin-bottom: 40px;
+      gap: 25px;
+      max-width: 1400px;
+      margin: auto;
     }
+
     .creator-section {
-      flex: 2.2;
-      min-width: 340px;
+      flex: 2;
     }
+
     .right-panel {
-      flex: 1.4;
-      min-width: 310px;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 20px;
     }
-    /* Modern cards */
-    .card-glass {
-      background: rgba(255, 255, 255, 0.97);
-      border-radius: 36px;
-      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
-      padding: 1.8rem;
-      border: 1px solid rgba(210, 225, 245, 0.6);
+
+    .card {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     }
+
     h2 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #1e2f4b, #122436);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      margin-bottom: 1.3rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-left: 5px solid #f5a623;
-      padding-left: 18px;
+      color: #fbbf24;
+      margin-bottom: 15px;
     }
+
+    label {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: white;
+    }
+
+    button {
+      background: #fbbf24;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #f59e0b;
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px 22px;
+      gap: 10px;
     }
+
     .full-width {
       grid-column: span 2;
     }
-    label {
-      font-weight: 700;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #2c3e66;
-      margin-bottom: 6px;
-      display: block;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 28px;
-      border: 1px solid #cfdfed;
-      background: white;
-      font-size: 0.95rem;
-      transition: 0.2s;
-      outline: none;
-    }
-    input:focus, select:focus {
-      border-color: #f5a623;
-      box-shadow: 0 0 0 3px rgba(245,166,35,0.2);
-    }
-    button {
-      background: #1e3c72;
-      color: white;
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 6px;
-      transition: all 0.2s;
-    }
-    button:hover {
-      background: #f0a500;
-      transform: translateY(-2px);
-    }
-    .btn-outline-sm {
-      background: #e2e8f0;
-      border: none;
-      padding: 4px 12px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      width: auto;
-    }
+
     .cart-items {
-      background: #f9fafc;
-      border-radius: 24px;
-      padding: 16px;
-      margin: 12px 0;
-      max-height: 210px;
-      overflow-y: auto;
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px 0;
     }
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 0.9rem;
-    }
-    .badge-total {
-      background: #f5a62310;
-      border-radius: 40px;
-      padding: 8px 20px;
-      font-weight: 800;
-      font-size: 1.3rem;
-      display: inline-block;
-    }
+
     .order-item {
-      background: #ffffffea;
-      border-radius: 24px;
-      padding: 14px 18px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      border-left: 5px solid #f5a623;
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-left: 4px solid #fbbf24;
       cursor: pointer;
-      transition: 0.1s;
     }
-    .order-item:hover {
-      background: #fff5e6;
-      transform: translateX(4px);
-    }
-    .transfer-info, .branch-hours-info {
-      background: #fef4e8;
-      border-radius: 24px;
-      padding: 14px;
-      margin-top: 12px;
-      font-size: 0.85rem;
-    }
+
     .hidden {
       display: none;
     }
-    .chip {
-      background: #eef2ff;
-      border-radius: 40px;
-      padding: 4px 12px;
-      font-size: 0.7rem;
-      font-weight: bold;
-    }
-    .card-fields {
-      background: #f8fafc;
-      border-radius: 28px;
-      padding: 12px 16px;
-      margin-top: 8px;
-      border: 1px solid #e2edf7;
-    }
-    .inline-group {
-      display: flex;
-      gap: 12px;
-    }
-    .inline-group input {
-      flex: 1;
-    }
-    .flex-buttons {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 12px 0;
-    }
-    #mapModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-card-map {
-      background: white;
-      width: 85%;
-      max-width: 900px;
-      height: 70%;
-      border-radius: 40px;
-      overflow: hidden;
-    }
-    #map {
-      width: 100%;
-      height: 75%;
-    }
-    .brand-sub {
-      font-size: 0.85rem;
-      color: #f5a623;
-      margin-top: 5px;
-      letter-spacing: 1px;
-    }
-    /* Team section - solo nombres */
-    .team-section {
-      max-width: 1500px;
-      margin: 20px auto 0;
-    }
-    .team-card {
-      background: linear-gradient(135deg, #ffffff 0%, #fef9f0 100%);
-      border-radius: 42px;
-      padding: 1.8rem 2rem;
-      box-shadow: 0 15px 30px -12px rgba(0,0,0,0.1);
-      border: 1px solid #ffecce;
-    }
-    .team-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 28px;
-      margin-top: 28px;
-    }
-    .member {
-      background: white;
-      border-radius: 32px;
-      padding: 1rem 1.6rem;
-      text-align: center;
-      flex: 1;
-      min-width: 160px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.05);
-      transition: all 0.2s;
-      border-bottom: 4px solid #f5a623;
-    }
-    .member i {
-      font-size: 2.5rem;
-      color: #1e3c72;
-      margin-bottom: 10px;
-    }
-    .member h4 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1e2f4b;
-    }
-    @media (max-width: 750px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .full-width { grid-column: span 1; }
-      .team-grid { flex-direction: column; align-items: center; }
-    }
   </style>
 </head>
+
 <body>
 
 <div class="dashboard">
-  <!-- LEFT: ORDER CREATOR -->
+
+  <!-- CREAR PEDIDO -->
   <div class="creator-section">
-    <div class="card-glass">
-      <h2><i class="fas fa-hard-hat"></i> Halcon Express<br><span class="brand-sub">🏗️ Construction materials ordering and delivery system in Mexico City</span></h2>
+    <div class="card">
+      <h2><i class="fas fa-hard-hat"></i> Halcon Express</h2>
+
       <div class="form-grid">
-        <div><label><i class="fas fa-user"></i> Full name</label><input id="custName" placeholder="Customer name"></div>
-        <div><label><i class="fas fa-phone"></i> Phone</label><input id="custPhone" placeholder="+52 XXX XXX XXXX"></div>
-        <div class="full-width"><label><i class="fas fa-cubes"></i> Material (kg / pieces)</label>
+        <div>
+          <label>Nombre</label>
+          <input id="custName">
+        </div>
+
+        <div>
+          <label>Teléfono</label>
+          <input id="custPhone">
+        </div>
+
+        <div class="full-width">
+          <label>Material</label>
           <select id="productSelect">
-            <option value="">-- select material --</option>
-            <option value="200" data-name="Cement 50kg" data-unit="kg sack">Cement 50kg - $200 (measure: 50kg sack)</option>
-            <option value="15" data-name="Brick (piece)" data-unit="unit">Brick - $15 (piece)</option>
-            <option value="500" data-name="Sand (ton)" data-unit="metric ton">Sand 1 ton - $500 (1000kg)</option>
-            <option value="400" data-name="Gravel (ton)" data-unit="metric ton">Gravel 1 ton - $400 (1000kg)</option>
-            <option value="300" data-name="Steel 3m rebar" data-unit="bar">Steel rebar 3m - $300 (bar)</option>
+            <option value="">Selecciona</option>
+            <option value="200" data-name="Cement">Cemento - $200</option>
+            <option value="15" data-name="Brick">Ladrillo - $15</option>
           </select>
         </div>
-        <div><label><i class="fas fa-weight-hanging"></i> Quantity (kg / pcs)</label><input id="qtyInput" type="number" placeholder="Amount"></div>
-        <div class="full-width"><button onclick="appendMaterial()"><i class="fas fa-cart-plus"></i> Add material</button></div>
-      </div>
-      <div><label>🛒 Cart (measures in kg / units)</label>
-        <div id="cartArea" class="cart-items">No materials added yet</div>
-        <div style="text-align:right;"><span class="badge-total">Total: $<span id="globalTotal">0</span></span></div>
-      </div>
 
-      <div class="form-grid" style="margin-top: 8px;">
-        <div><label><i class="fas fa-truck"></i> Service mode</label>
-          <select id="modeSelect" onchange="toggleDeliveryPickupUI()">
-            <option value="delivery">🚚 Delivery (home)</option>
-            <option value="pickup">🏬 Pickup at branch</option>
-          </select>
-        </div>
-        <div><label><i class="fas fa-city"></i> Borough (CDMX - 16)</label>
-          <select id="alcaldiaSelect" onchange="updateBranchesAndRidersDisplay()"></select>
-        </div>
-        <div id="addressContainer" class="full-width"><label><i class="fas fa-location-dot"></i> Street address</label><input id="addressInput" placeholder="Street, number, neighborhood"></div>
-        <div id="branchContainer" class="full-width hidden"><label><i class="fas fa-store"></i> Pickup branch (32 locations, 2 per borough)</label><select id="branchSelect"></select></div>
-        
-        <!-- Branch hours (only visible when pickup) -->
-        <div id="branchHoursContainer" class="full-width hidden branch-hours-info">
-          <i class="far fa-clock"></i> <strong>Branch opening hours</strong><br>
-          ⏰ Mon-Fri: 7:00 AM - 6:00 PM &nbsp;|&nbsp; Sat: 8:00 AM - 2:00 PM<br>
-          📍 Sunday closed · Accepts cash / card on-site.
+        <div>
+          <label>Cantidad</label>
+          <input id="qtyInput" type="number">
         </div>
 
-        <!-- Payment method selector (dynamic) -->
-        <div id="paymentSelectorDiv" class="full-width"><label><i class="fas fa-credit-card"></i> Payment method</label>
-          <select id="paymentSelect" onchange="toggleCardFieldsAndTransfer()">
-            <option value="card">💳 Credit/Debit card</option>
-            <option value="transfer">🏦 Bank transfer / OXXO</option>
-          </select>
-        </div>
-        
-        <!-- Card fields: 10 digits + 3 cvv (digits only) -->
-        <div id="cardDigitsContainer" class="full-width card-fields">
-          <label><i class="fas fa-credit-card"></i> Card number (last 10 digits) & CVV</label>
-          <div class="inline-group">
-            <input type="text" id="cardDigits" placeholder="10 digits" maxlength="10" pattern="\d*" inputmode="numeric">
-            <input type="text" id="cvvDigits" placeholder="CVV (3 digits)" maxlength="3" pattern="\d*" inputmode="numeric">
-          </div>
-          <small style="color:#4b5563;">Only digits allowed. 10 digits + 3-digit CVV required for card payment.</small>
-        </div>
-        
-        <!-- Transfer info (bank / oxxo) -->
-        <div id="transferInfoBox" class="full-width hidden transfer-info">
-          <i class="fas fa-building"></i> <strong>Bank / OXXO deposit details</strong><br>
-          🏦 BBVA account: 1234 5678 9012 3456<br>
-          📟 CLABE: 012180123456789012<br>
-          🧾 OXXO reference: <span id="oxxoRefDynamic">HAL-9988</span><br>
-          <small>Deposit at any BBVA branch or OXXO store.</small>
-        </div>
-
-        <!-- Message for pickup: pay at branch (no card/transfer) -->
-        <div id="payAtBranchMsg" class="full-width hidden transfer-info" style="background:#e2f0e6;">
-          <i class="fas fa-cash-register"></i> <strong>Payment at branch</strong><br>
-          When picking up, you will pay directly at the branch (cash or card on-site). No online payment required.
+        <div class="full-width">
+          <button onclick="addItem()">Agregar</button>
         </div>
       </div>
-      <button onclick="buildCompleteOrder()" style="margin-top: 20px;"><i class="fas fa-check-double"></i> Create order & assign rider</button>
-      <div id="creationMsg" style="margin-top: 12px; font-weight: 500;"></div>
+
+      <div class="cart-items" id="cartArea">Carrito vacío</div>
+
+      <button onclick="createOrder()">Crear pedido</button>
+
+      <div id="msg"></div>
     </div>
   </div>
 
-  <!-- RIGHT: Orders + Search -->
+  <!-- PANEL DERECHO -->
   <div class="right-panel">
-    <div class="card-glass">
-      <h2><i class="fas fa-clipboard-list"></i> Active orders</h2>
-      <div id="ordersListContainer">No orders yet</div>
-    </div>
-    <div class="card-glass">
-      <h2><i class="fas fa-search"></i> Track by folio</h2>
-      <input id="folioSearchField" placeholder="Example: HAL-2103">
-      <button onclick="searchOrderByFolio()"><i class="fas fa-binoculars"></i> Search order</button>
-      <div id="orderDetailsResult" style="margin-top: 20px;"></div>
-    </div>
-  </div>
-</div>
 
-<!-- TEAM SECTION  -->
-<div class="team-section">
-  <div class="team-card">
-    <h2 style="border-left-color: #f5a623; margin-bottom: 0.5rem;"><i class="fas fa-users"></i> Team Members</h2>
-    <p style="text-align: center; color: #4a5568; margin-bottom: 20px;">Halcon Express · Construction Materials Platform</p>
-    <div class="team-grid">
-      <div class="member">
-        <i class="fas fa-user-circle"></i>
-        <h4>Adriana Caballero Manuel - Al02968338</h4>
-      </div>
-      <div class="member">
-        <i class="fas fa-user-circle"></i>
-        <h4>José Alberto Rocha Munguía- AL02962584</h4>
-      </div>
-      <div class="member">
-        <i class="fas fa-user-circle"></i>
-        <h4>Carlos David Rojas Talavera - AL05056807</h4>
-      </div>
-      <div class="member">
-        <i class="fas fa-user-circle"></i>
-        <h4>Axel David Vargas Díaz De Vivar - AL02987307</h4>
-      </div>
+    <div class="card">
+      <h2>Pedidos</h2>
+      <div id="orders"></div>
     </div>
-    <p style="text-align: center; font-size: 0.75rem; margin-top: 24px; color: #7e8a98;"><i class="fas fa-copyright"></i> Halcon Express Construction Materials · Team work 2026</p>
-  </div>
-</div>
 
-<!-- MAP MODAL -->
-<div id="mapModal">
-  <div class="modal-card-map">
-    <div id="map" style="height: 75%;"></div>
-    <button onclick="closeMapModalWindow()" style="display: block; margin: 16px auto; width: 200px;">Close map</button>
+    <div class="card">
+      <h2>Buscar</h2>
+      <input id="search">
+      <button onclick="search()">Buscar</button>
+      <div id="result"></div>
+    </div>
+
   </div>
+
 </div>
 
 <script>
-  // ---------- 16 BOROUGHS (ALCALDIAS) CDMX ----------
-  const ALL_ALCALDIAS = [
-    "Álvaro Obregón", "Azcapotzalco", "Benito Juárez", "Coyoacán", "Cuajimalpa", "Cuauhtémoc",
-    "Gustavo A. Madero", "Iztacalco", "Iztapalapa", "Magdalena Contreras", "Miguel Hidalgo",
-    "Milpa Alta", "Tláhuac", "Tlalpan", "Venustiano Carranza", "Xochimilco"
-  ];
+let cart = [];
+let orders = [];
 
-  // 2 branches borough 
-  const branchMapping = {};
-  // 2 riders 
-  const riderMapping = {};
+function addItem() {
+  const select = document.getElementById("productSelect");
+  const qty = document.getElementById("qtyInput").value;
 
-  ALL_ALCALDIAS.forEach(alc => {
-    branchMapping[alc] = [
-      `Central Branch - ${alc}, Av. Construction 234`,
-      `North Branch - ${alc}, Carr. Materials 567`
-    ];
-    riderMapping[alc] = [
-      { name: `Raúl Hernández (${alc.slice(0,4)})`, phone: `+52 55 2201 ${Math.floor(100+Math.random()*900)}` },
-      { name: `Karla Martínez (${alc.slice(0,4)})`, phone: `+52 55 3302 ${Math.floor(100+Math.random()*900)}` }
-    ];
+  if (!select.value || !qty) return;
+
+  cart.push({
+    name: select.options[select.selectedIndex].text,
+    qty: qty
   });
 
-  let currentCart = [];      // { name, price, qty, measureDesc }
-  let ordersMaster = [];
-  let folioSeed = 2100;
-
-  // Cart render
-  function renderCart() {
-    const container = document.getElementById("cartArea");
-    let total = 0;
-    if (currentCart.length === 0) {
-      container.innerHTML = "No materials added";
-      document.getElementById("globalTotal").innerText = "0";
-      return;
-    }
-    let html = "";
-    currentCart.forEach((item, idx) => {
-      const sub = item.price * item.qty;
-      total += sub;
-      html += `<div class="cart-item">
-        <span><strong>${item.name}</strong> × ${item.qty} ${item.measureDesc} → $${item.price}/ea</span>
-        <span>$${sub} <button class="btn-outline-sm" onclick="removeCartItemByIndex(${idx})"><i class="fas fa-trash-alt"></i></button></span>
-      </div>`;
-    });
-    container.innerHTML = html;
-    document.getElementById("globalTotal").innerText = total;
-  }
-
-  function appendMaterial() {
-    const prodEl = document.getElementById("productSelect");
-    const qtyVal = document.getElementById("qtyInput").value;
-    if (!prodEl.value || !qtyVal || qtyVal <= 0) {
-      alert("Select a material and valid quantity (kg / pieces)");
-      return;
-    }
-    const opt = prodEl.options[prodEl.selectedIndex];
-    const prodName = opt.dataset.name;
-    const price = Number(prodEl.value);
-    let measureDisplay = "";
-    if (prodName.includes("Cement")) measureDisplay = "kg (50kg sack)";
-    else if (prodName.includes("Sand")) measureDisplay = "metric ton (1000kg)";
-    else if (prodName.includes("Gravel")) measureDisplay = "metric ton";
-    else if (prodName.includes("Steel")) measureDisplay = "3m rebar length";
-    else measureDisplay = opt.dataset.unit || "unit";
-
-    currentCart.push({
-      name: prodName,
-      price: price,
-      qty: Number(qtyVal),
-      measureDesc: measureDisplay
-    });
-    renderCart();
-    document.getElementById("qtyInput").value = "";
-    prodEl.value = "";
-  }
-
-  function removeCartItemByIndex(idx) { currentCart.splice(idx, 1); renderCart(); }
-
-  // UI toggles: delivery vs pickup
-  function toggleDeliveryPickupUI() {
-    const mode = document.getElementById("modeSelect").value;
-    const branchDiv = document.getElementById("branchContainer");
-    const addressDiv = document.getElementById("addressContainer");
-    const branchHoursDiv = document.getElementById("branchHoursContainer");
-    const paymentSelectorDiv = document.getElementById("paymentSelectorDiv");
-    const cardContainer = document.getElementById("cardDigitsContainer");
-    const transferBox = document.getElementById("transferInfoBox");
-    const payAtBranchMsgDiv = document.getElementById("payAtBranchMsg");
-
-    if (mode === "pickup") {
-      branchDiv.classList.remove("hidden");
-      addressDiv.classList.add("hidden");
-      branchHoursDiv.classList.remove("hidden");
-      paymentSelectorDiv.classList.add("hidden");
-      cardContainer.classList.add("hidden");
-      transferBox.classList.add("hidden");
-      payAtBranchMsgDiv.classList.remove("hidden");
-    } else {
-      branchDiv.classList.add("hidden");
-      addressDiv.classList.remove("hidden");
-      branchHoursDiv.classList.add("hidden");
-      paymentSelectorDiv.classList.remove("hidden");
-      payAtBranchMsgDiv.classList.add("hidden");
-      const payment = document.getElementById("paymentSelect").value;
-      if (payment === "card") {
-        cardContainer.classList.remove("hidden");
-        transferBox.classList.add("hidden");
-      } else {
-        cardContainer.classList.add("hidden");
-        transferBox.classList.remove("hidden");
-      }
-    }
-  }
-
-  function updateBranchesAndRidersDisplay() {
-    const alc = document.getElementById("alcaldiaSelect").value;
-    const branchSelect = document.getElementById("branchSelect");
-    if (branchSelect && branchMapping[alc]) {
-      branchSelect.innerHTML = "";
-      branchMapping[alc].forEach(b => {
-        const opt = document.createElement("option");
-        opt.value = b;
-        opt.textContent = b;
-        branchSelect.appendChild(opt);
-      });
-    }
-  }
-
-  function toggleCardFieldsAndTransfer() {
-    const mode = document.getElementById("modeSelect").value;
-    if (mode === "pickup") return;
-    const payment = document.getElementById("paymentSelect").value;
-    const cardContainer = document.getElementById("cardDigitsContainer");
-    const transferBox = document.getElementById("transferInfoBox");
-    if (payment === "card") {
-      cardContainer.classList.remove("hidden");
-      transferBox.classList.add("hidden");
-    } else {
-      cardContainer.classList.add("hidden");
-      transferBox.classList.remove("hidden");
-      const randomRef = "OX" + Math.floor(100000 + Math.random() * 900000);
-      document.getElementById("oxxoRefDynamic").innerText = randomRef;
-    }
-  }
-
-  function getAssignedRider(borough) {
-    const riders = riderMapping[borough];
-    if (!riders) return { name: "Support rider", phone: "555-0000" };
-    return riders[0];
-  }
-
-  function validateCardInline() {
-    const mode = document.getElementById("modeSelect").value;
-    if (mode === "pickup") return true;
-    const payment = document.getElementById("paymentSelect").value;
-    if (payment === "card") {
-      const cardDigits = document.getElementById("cardDigits").value.trim();
-      const cvv = document.getElementById("cvvDigits").value.trim();
-      if (!/^\d{10}$/.test(cardDigits)) {
-        alert("Card error: exactly 10 digits required (only numbers).");
-        return false;
-      }
-      if (!/^\d{3}$/.test(cvv)) {
-        alert("CVV error: exactly 3 digits required.");
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // CREATE ORDER
-  function buildCompleteOrder() {
-    const name = document.getElementById("custName").value.trim();
-    const phone = document.getElementById("custPhone").value.trim();
-    if (!name || !phone) { alert("Customer name and phone required"); return; }
-    if (currentCart.length === 0) { alert("Add at least one material (kg or pieces)"); return; }
-    if (!validateCardInline()) return;
-
-    const mode = document.getElementById("modeSelect").value;
-    const borough = document.getElementById("alcaldiaSelect").value;
-    let finalAddress = "";
-    let branchPickup = null;
-    if (mode === "delivery") {
-      finalAddress = document.getElementById("addressInput").value.trim();
-      if (!finalAddress) { alert("Delivery requires full address"); return; }
-    } else {
-      branchPickup = document.getElementById("branchSelect").value;
-      if (!branchPickup) { alert("Pickup requires branch selection"); return; }
-      finalAddress = `Pickup at: ${branchPickup}`;
-    }
-
-    const paymentMethod = (mode === "pickup") ? "pay_at_branch" : document.getElementById("paymentSelect").value;
-    let totalSum = 0;
-    currentCart.forEach(item => totalSum += item.price * item.qty);
-
-    let riderAssigned = null;
-    if (mode === "delivery") riderAssigned = getAssignedRider(borough);
-
-    const folio = "HAL-" + (folioSeed++);
-    const eta = new Date();
-    eta.setDate(eta.getDate() + 1);
-    const etaFormatted = eta.toLocaleDateString() + " " + (Math.floor(Math.random() * 7) + 10) + ":00 hrs";
-
-    const newOrder = {
-      folio: folio,
-      customer: name,
-      phone: phone,
-      mode: mode,
-      borough: borough,
-      addressDisplay: finalAddress,
-      branchPickup: branchPickup,
-      products: JSON.parse(JSON.stringify(currentCart)),
-      total: totalSum,
-      payment: paymentMethod,
-      status: "Preparing",
-      eta: etaFormatted,
-      createdAt: Date.now(),
-      rider: riderAssigned ? { ...riderAssigned } : null,
-      cancelReason: null,
-      returnReason: null,
-      isActive: true
-    };
-
-    ordersMaster.push(newOrder);
-    document.getElementById("creationMsg").innerHTML = `✅ Order created: <strong>${folio}</strong> ${riderAssigned ? `· Rider: ${riderAssigned.name}` : "· Pickup (pay at branch)"}`;
-    
-    currentCart = [];
-    renderCart();
-    document.getElementById("custName").value = "";
-    document.getElementById("custPhone").value = "";
-    document.getElementById("addressInput").value = "";
-    document.getElementById("cardDigits").value = "";
-    document.getElementById("cvvDigits").value = "";
-    renderOrdersList();
-    simulateOrderProgress(newOrder);
-  }
-
-  function simulateOrderProgress(order) {
-    let interval = setInterval(() => {
-      const idx = ordersMaster.findIndex(o => o.folio === order.folio && o.isActive !== false);
-      if (idx === -1) { clearInterval(interval); return; }
-      const elapsed = (Date.now() - ordersMaster[idx].createdAt) / 1000;
-      if (ordersMaster[idx].status === "Preparing" && elapsed > 7) ordersMaster[idx].status = "On route";
-      else if (ordersMaster[idx].status === "On route" && elapsed > 16) ordersMaster[idx].status = "Delivered";
-      else if (ordersMaster[idx].status === "Delivered") clearInterval(interval);
-      renderOrdersList();
-      const currentFolio = document.getElementById("folioSearchField").value;
-      if (currentFolio === order.folio) searchOrderByFolio();
-    }, 4000);
-  }
-
-  function renderOrdersList() {
-    const container = document.getElementById("ordersListContainer");
-    const activeOrders = ordersMaster.filter(o => o.isActive !== false);
-    if (activeOrders.length === 0) {
-      container.innerHTML = "<div style='padding:12px; text-align:center;'>📭 No active orders</div>";
-      return;
-    }
-    let html = "";
-    activeOrders.forEach(o => {
-      html += `<div class="order-item" onclick="searchSpecificFolio('${o.folio}')">
-        <div style="display:flex; justify-content:space-between;"><b>${o.customer}</b> <span class="chip">${o.folio}</span></div>
-        <div><small>${o.status} | ${o.mode === "delivery" ? "🚚 Delivery" : "🏬 Pickup"} | $${o.total}</small></div>
-      </div>`;
-    });
-    container.innerHTML = html;
-  }
-
-  function searchSpecificFolio(folio) {
-    document.getElementById("folioSearchField").value = folio;
-    searchOrderByFolio();
-  }
-
-  function searchOrderByFolio() {
-    const folioVal = document.getElementById("folioSearchField").value.trim();
-    const order = ordersMaster.find(o => o.folio === folioVal && o.isActive !== false);
-    const resultDiv = document.getElementById("orderDetailsResult");
-    if (!order) {
-      resultDiv.innerHTML = "<div style='background:#ffe0e0; border-radius:28px; padding:16px;'><i class='fas fa-skull-crosswalk'></i> Order not found or was cancelled/returned</div>";
-      return;
-    }
-
-    let riderHtml = "";
-    if (order.mode === "delivery" && order.rider) {
-      riderHtml = `<div style="background:#e3f2e8; border-radius:20px; padding:10px; margin:12px 0;"><i class="fas fa-motorcycle"></i> <strong>Assigned rider:</strong> ${order.rider.name} · 📞 ${order.rider.phone}</div>`;
-    } else if (order.mode === "pickup") {
-      riderHtml = `<div><i class="fas fa-store"></i> Pickup order — no rider. Branch: ${order.branchPickup}</div><div class="branch-hours-info" style="margin-top:8px;"><i class="far fa-clock"></i> Branch hours: Mon-Fri 7AM–6PM, Sat 8AM–2PM</div>`;
-    }
-
-    let prodList = "<ul style='margin-left:16px;'>";
-    order.products.forEach(p => {
-      prodList += `<li><strong>${p.name}</strong> × ${p.qty} ${p.measureDesc || "units"} → $${p.price * p.qty}</li>`;
-    });
-    prodList += "</ul>";
-
-    let paymentText = "";
-    if (order.payment === "card") paymentText = "💳 Card payment";
-    else if (order.payment === "transfer") paymentText = "🏦 Transfer / OXXO";
-    else paymentText = "💰 Pay at branch (cash/card)";
-
-    resultDiv.innerHTML = `
-      <div style="background:#fff8ef; border-radius:32px; padding:20px; margin-top:8px;">
-        <h3><i class="fas fa-ticket-alt"></i> ${order.folio}</h3>
-        <p><i class="fas fa-user"></i> ${order.customer} | 📞 ${order.phone}</p>
-        <p><i class="fas fa-map-pin"></i> ${order.addressDisplay}</p>
-        <p><i class="fas fa-calendar-week"></i> Estimated: ${order.eta}</p>
-        <p><b>Status:</b> <span style="background:#133c6e20; border-radius:40px; padding:2px 10px;">${order.status}</span></p>
-        <p><b>Products (kg / pieces):</b></p>
-        ${prodList}
-        <p><b>Total:</b> $${order.total} | ${paymentText}</p>
-        ${riderHtml}
-        <div class="flex-buttons">
-          <button onclick="handleCancelOrder('${order.folio}')" style="background:#b91c1c; width:auto;"><i class="fas fa-ban"></i> Cancel order</button>
-          <button onclick="handleReturnOrder('${order.folio}')" style="background:#d97706; width:auto;"><i class="fas fa-undo-alt"></i> Return order</button>
-        </div>
-        ${order.cancelReason ? `<p style="color:#b91c1c;"><i class="fas fa-comment"></i> Cancel reason: ${order.cancelReason}</p>` : ""}
-        ${order.returnReason ? `<p style="color:#b45309;"><i class="fas fa-exchange-alt"></i> Return reason: ${order.returnReason}</p>` : ""}
-        <button onclick="openMapForBorough('${order.borough}')" style="background:#2c5f8a; width:auto; margin-top:10px;"><i class="fas fa-map-marked-alt"></i> Show borough map</button>
-      </div>
-    `;
-  }
-
-  window.handleCancelOrder = function(folio) {
-    const reason = prompt("❌ Cancel reason (required): Why cancel this order?");
-    if (!reason) return;
-    const index = ordersMaster.findIndex(o => o.folio === folio);
-    if (index !== -1 && ordersMaster[index].isActive !== false) {
-      ordersMaster[index].cancelReason = reason;
-      ordersMaster[index].status = "Cancelled";
-      ordersMaster[index].isActive = false;
-      renderOrdersList();
-      document.getElementById("orderDetailsResult").innerHTML = `<div style="padding:16px; background:#fff0f0; border-radius:28px;">🗑️ Order ${folio} cancelled and removed from active orders.</div>`;
-      document.getElementById("folioSearchField").value = "";
-    } else alert("Order not found or already cancelled/returned");
-  };
-
-  window.handleReturnOrder = function(folio) {
-    const reason = prompt("🔄 Return reason (defective, wrong item, etc):");
-    if (!reason) return;
-    const index = ordersMaster.findIndex(o => o.folio === folio);
-    if (index !== -1 && ordersMaster[index].isActive !== false && (ordersMaster[index].status === "Delivered" || ordersMaster[index].status === "On route")) {
-      ordersMaster[index].returnReason = reason;
-      ordersMaster[index].status = "Returned";
-      ordersMaster[index].isActive = false;
-      renderOrdersList();
-      document.getElementById("orderDetailsResult").innerHTML = `<div style="padding:16px; background:#fff1e0; border-radius:28px;">↩️ Order ${folio} returned and removed from active list.</div>`;
-      document.getElementById("folioSearchField").value = "";
-    } else alert("Only orders with status 'On route' or 'Delivered' can be returned, or order already inactive.");
-  };
-
-  function openMapForBorough(borough) {
-    const coordMap = {
-      "Álvaro Obregón": [19.359, -99.219], "Azcapotzalco": [19.48, -99.185], "Benito Juárez": [19.38, -99.16],
-      "Coyoacán": [19.349, -99.161], "Cuajimalpa": [19.359, -99.284], "Cuauhtémoc": [19.432, -99.133],
-      "Gustavo A. Madero": [19.481, -99.114], "Iztacalco": [19.395, -99.094], "Iztapalapa": [19.355, -99.077],
-      "Magdalena Contreras": [19.319, -99.236], "Miguel Hidalgo": [19.436, -99.199], "Milpa Alta": [19.192, -99.023],
-      "Tláhuac": [19.281, -99.005], "Tlalpan": [19.288, -99.168], "Venustiano Carranza": [19.428, -99.113], "Xochimilco": [19.255, -99.102]
-    };
-    const latlng = coordMap[borough] || [19.4326, -99.1332];
-    const modal = document.getElementById("mapModal");
-    modal.style.display = "flex";
-    setTimeout(() => {
-      if (window.mapObj) window.mapObj.remove();
-      const mapInstance = L.map("map").setView(latlng, 13);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapInstance);
-      L.marker(latlng).addTo(mapInstance).bindPopup(`📍 ${borough}`).openPopup();
-      window.mapObj = mapInstance;
-    }, 100);
-  }
-
-  function closeMapModalWindow() {
-    document.getElementById("mapModal").style.display = "none";
-    if (window.mapObj) window.mapObj.remove();
-  }
-
-  function initAlcaldias() {
-    const select = document.getElementById("alcaldiaSelect");
-    select.innerHTML = "";
-    ALL_ALCALDIAS.forEach(alc => {
-      const opt = document.createElement("option");
-      opt.value = alc;
-      opt.textContent = alc;
-      select.appendChild(opt);
-    });
-    updateBranchesAndRidersDisplay();
-  }
-
-  // Initialization
-  initAlcaldias();
-  toggleDeliveryPickupUI();
-  toggleCardFieldsAndTransfer();
   renderCart();
-  renderOrdersList();
-  window.appendMaterial = appendMaterial;
-  window.removeCartItemByIndex = removeCartItemByIndex;
-  window.buildCompleteOrder = buildCompleteOrder;
-  window.searchOrderByFolio = searchOrderByFolio;
-  window.closeMapModalWindow = closeMapModalWindow;
-  window.openMapForBorough = openMapForBorough;
+}
+
+function renderCart() {
+  const area = document.getElementById("cartArea");
+
+  if (cart.length === 0) {
+    area.innerHTML = "Carrito vacío";
+    return;
+  }
+
+  area.innerHTML = "";
+
+  cart.forEach(item => {
+    area.innerHTML += `<div>${item.name} x ${item.qty}</div>`;
+  });
+}
+
+function createOrder() {
+  const name = document.getElementById("custName").value;
+
+  if (!name || cart.length === 0) return;
+
+  const order = {
+    id: "HAL-" + Math.floor(Math.random()*1000),
+    name,
+    cart: [...cart]
+  };
+
+  orders.push(order);
+
+  document.getElementById("msg").innerText = "Pedido creado";
+
+  cart = [];
+  renderCart();
+  renderOrders();
+}
+
+function renderOrders() {
+  const div = document.getElementById("orders");
+
+  div.innerHTML = "";
+
+  orders.forEach(o => {
+    div.innerHTML += `<div class="order-item">${o.id} - ${o.name}</div>`;
+  });
+}
+
+function search() {
+  const val = document.getElementById("search").value;
+
+  const order = orders.find(o => o.id === val);
+
+  if (!order) {
+    document.getElementById("result").innerText = "No encontrado";
+    return;
+  }
+
+  document.getElementById("result").innerText = order.name;
+}
 </script>
+
 </body>
 </html>
