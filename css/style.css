@@ -1,16 +1,147 @@
-body{
-font-family: Arial, sans-serif;
-background:#f8f9fa;
+body {
+  background: #e9edf2;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 30px;
 }
 
-.card{
-border-radius:15px;
+/* CONTENEDOR PRINCIPAL */
+.dashboard {
+  display: flex;
+  gap: 25px;
+  max-width: 1300px;
+  margin: auto;
 }
 
-h1,h2{
-font-weight:bold;
+/* TARJETAS */
+.card-glass {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: none;
 }
 
-button{
-border-radius:10px;
+/* TITULOS */
+h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2d3d;
+  border-left: 4px solid #f39c12;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+
+/* INPUTS */
+input, select {
+  border-radius: 25px;
+  border: 1px solid #dce3ea;
+  padding: 12px 15px;
+  background: #f7f9fc;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
+  border-color: #2c4a7a;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(44,74,122,0.1);
+}
+
+/* BOTONES */
+button {
+  border-radius: 25px;
+  background: #2c4a7a;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #1f3a63;
+}
+
+/* BOTON GRANDE */
+button.full {
+  width: 100%;
+}
+
+/* CARRITO */
+.cart-items {
+  background: #f4f6f9;
+  border-radius: 15px;
+  padding: 12px;
+}
+
+/* ITEM CARRITO */
+.cart-item {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* TOTAL */
+.badge-total {
+  background: #f3ede5;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+/* PANEL DERECHO */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ORDENES */
+.order-item {
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 15px;
+  border-left: 4px solid #f39c12;
+  cursor: pointer;
+}
+
+.order-item:hover {
+  background: #f9fafc;
+}
+
+/* LABELS */
+label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #4a5c6a;
+  margin-bottom: 5px;
+}
+
+/* GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
 }
