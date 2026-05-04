@@ -6,263 +6,222 @@
 
 <title>Halcon Express</title>
 
-<!-- Font Awesome -->
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
+body{
+  background:#eef2f5;
+  padding:25px;
+  transition:.3s;
 }
 
-/* ---------- LIGHT MODE (DEFAULT) ---------- */
-body {
-  background: #eef2f5;
-  padding: 28px;
-  transition: 0.3s;
+.dashboard{
+  display:flex;
+  gap:25px;
+  flex-wrap:wrap;
 }
 
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+.creator-section{flex:2;min-width:320px;}
+.right-panel{flex:1;min-width:300px;display:flex;flex-direction:column;gap:20px;}
+
+.card-glass{
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
 
-.dashboard {
-  display: flex;
-  gap: 25px;
-  flex-wrap: wrap;
+h2{
+  border-left:5px solid #f5a623;
+  padding-left:10px;
+  margin-bottom:15px;
+  color:#1e2f4b;
 }
 
-.left {
-  flex: 2;
-  min-width: 300px;
+label{font-size:.8rem;font-weight:600;}
+
+input,select{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid #d1d9e6;
+  margin:5px 0 10px;
 }
 
-.right {
-  flex: 1;
-  min-width: 280px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+button{
+  background:#1e3c72;
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:15px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-h2 {
-  border-left: 5px solid #f5a623;
-  padding-left: 10px;
-  margin-bottom: 15px;
-  color: #1e2f4b;
+button:hover{background:#f5a623;}
+
+.cart-items{
+  background:#f4f7fb;
+  padding:10px;
+  border-radius:12px;
 }
 
-label {
-  font-size: 0.8rem;
-  font-weight: 600;
+.order-item{
+  background:white;
+  padding:10px;
+  border-radius:12px;
+  margin-bottom:8px;
+  border-left:4px solid #f5a623;
+  cursor:pointer;
 }
 
-input, select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #d1d9e6;
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
+/* DARK MODE */
+body.dark{background:#0f172a;}
 
-button {
-  background: #1e3c72;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 15px;
-  cursor: pointer;
-  font-weight: bold;
+body.dark .card-glass{background:#1e293b;color:white;}
+body.dark h2{color:#fbbf24;}
+body.dark input,body.dark select{
+  background:#020617;
+  color:white;
+  border:1px solid #334155;
 }
+body.dark .cart-items{background:#020617;}
+body.dark .order-item{background:#020617;color:white;}
+body.dark button{background:#f5a623;color:black;}
+body.dark button:hover{background:#fbbf24;}
 
-button:hover {
-  background: #f5a623;
+/* toggle */
+.dark-toggle{
+  position:fixed;
+  top:15px;
+  right:15px;
+  background:#1e3c72;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
 }
-
-.cart {
-  background: #f4f7fb;
-  padding: 10px;
-  border-radius: 12px;
-}
-
-/* ---------- DARK MODE ---------- */
-body.dark {
-  background: #0f172a;
-}
-
-body.dark .card {
-  background: #1e293b;
-  color: white;
-}
-
-body.dark h2 {
-  color: #fbbf24;
-}
-
-body.dark input,
-body.dark select {
-  background: #0f172a;
-  border: 1px solid #334155;
-  color: white;
-}
-
-body.dark .cart {
-  background: #020617;
-}
-
-body.dark button {
-  background: #f5a623;
-  color: black;
-}
-
-body.dark button:hover {
-  background: #fbbf24;
-}
-
-/* toggle button */
-.toggle-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: black;
-  color: white;
-  border-radius: 20px;
-  padding: 8px 15px;
-  cursor: pointer;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="toggle-btn" onclick="toggleDark()">
-  🌙 / ☀️
-</div>
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙 / ☀️</button>
 
 <div class="dashboard">
 
-<!-- LEFT -->
-<div class="left card">
+<div class="creator-section">
+<div class="card-glass">
+
 <h2><i class="fas fa-hard-hat"></i> Halcon Express</h2>
 
 <label>Nombre</label>
-<input id="name">
+<input id="custName">
 
 <label>Teléfono</label>
-<input id="phone">
+<input id="custPhone">
 
 <label>Material</label>
-<select id="material">
-  <option value="200">Cemento - $200</option>
-  <option value="15">Ladrillo - $15</option>
+<select id="productSelect">
+<option value="">Selecciona</option>
+<option value="200" data-name="Cemento">Cemento - $200</option>
+<option value="15" data-name="Ladrillo">Ladrillo - $15</option>
 </select>
 
 <label>Cantidad</label>
-<input id="qty" type="number">
+<input id="qtyInput" type="number">
 
-<button onclick="add()">Agregar</button>
+<button onclick="appendMaterial()">Agregar</button>
 
-<div class="cart" id="cart">Carrito vacío</div>
+<div class="cart-items" id="cartArea">Carrito vacío</div>
 
-<button onclick="createOrder()">Crear pedido</button>
+<button onclick="buildCompleteOrder()">Crear pedido</button>
 
-<p id="msg"></p>
+<div id="creationMsg"></div>
+
+</div>
 </div>
 
-<!-- RIGHT -->
-<div class="right">
+<div class="right-panel">
 
-<div class="card">
+<div class="card-glass">
 <h2>Pedidos</h2>
-<div id="orders">Sin pedidos</div>
+<div id="ordersListContainer">Sin pedidos</div>
 </div>
 
-<div class="card">
+<div class="card-glass">
 <h2>Buscar</h2>
-<input id="search">
-<button onclick="searchOrder()">Buscar</button>
-<p id="result"></p>
+<input id="folioSearchField">
+<button onclick="searchOrderByFolio()">Buscar</button>
+<div id="orderDetailsResult"></div>
 </div>
 
 </div>
+
 </div>
 
 <script>
-let cart = [];
-let orders = [];
-let id = 100;
+let cart=[];
+let orders=[];
+let folio=500;
 
-function add() {
-  let mat = document.getElementById("material");
-  let qty = document.getElementById("qty").value;
+function appendMaterial(){
+let prod=document.getElementById("productSelect");
+let qty=document.getElementById("qtyInput").value;
 
-  if (!qty) return;
+if(!prod.value||!qty)return;
 
-  let name = mat.options[mat.selectedIndex].text;
-  let price = mat.value;
-
-  cart.push({name, qty, price});
-  renderCart();
+cart.push({
+name:prod.options[prod.selectedIndex].dataset.name,
+price:prod.value,
+qty:qty
+});
+renderCart();
 }
 
-function renderCart() {
-  let c = document.getElementById("cart");
-  if (cart.length === 0) {
-    c.innerHTML = "Carrito vacío";
-    return;
-  }
-
-  c.innerHTML = cart.map(i =>
-    `${i.name} x${i.qty}`
-  ).join("<br>");
+function renderCart(){
+let c=document.getElementById("cartArea");
+if(cart.length===0){c.innerHTML="Carrito vacío";return;}
+c.innerHTML=cart.map(i=>`${i.name} x${i.qty}`).join("<br>");
 }
 
-function createOrder() {
-  let name = document.getElementById("name").value;
-  if (!name || cart.length === 0) return;
+function buildCompleteOrder(){
+let name=document.getElementById("custName").value;
+if(!name||cart.length===0)return;
 
-  let folio = "HAL-" + id++;
-  orders.push({folio, name});
+let id="HAL-"+folio++;
+orders.push({folio:id,name:name});
 
-  document.getElementById("msg").innerText = "Pedido creado: " + folio;
+document.getElementById("creationMsg").innerText="Pedido creado: "+id;
 
-  cart = [];
-  renderCart();
-  renderOrders();
+cart=[];
+renderCart();
+renderOrders();
 }
 
-function renderOrders() {
-  let o = document.getElementById("orders");
-
-  if (orders.length === 0) {
-    o.innerHTML = "Sin pedidos";
-    return;
-  }
-
-  o.innerHTML = orders.map(x =>
-    `${x.folio} - ${x.name}`
-  ).join("<br>");
+function renderOrders(){
+let o=document.getElementById("ordersListContainer");
+if(orders.length===0){o.innerHTML="Sin pedidos";return;}
+o.innerHTML=orders.map(x=>`${x.folio} - ${x.name}`).join("<br>");
 }
 
-function searchOrder() {
-  let f = document.getElementById("search").value;
-
-  let found = orders.find(o => o.folio === f);
-
-  document.getElementById("result").innerText =
-    found ? "Encontrado" : "No encontrado";
+function searchOrderByFolio(){
+let f=document.getElementById("folioSearchField").value;
+let found=orders.find(o=>o.folio===f);
+document.getElementById("orderDetailsResult").innerText=found?"Encontrado":"No encontrado";
 }
 
 /* DARK MODE */
-function toggleDark() {
-  document.body.classList.toggle("dark");
+function toggleDarkMode(){
+document.body.classList.toggle("dark");
 }
 </script>
 
