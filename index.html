@@ -1,292 +1,237 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Halcon Express</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<title>Halcon Express</title>
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, sans-serif;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-  body {
-    background: #e9edf2; /* gris suave (antes blanco) */
-    padding: 28px 24px;
-  }
+/* ---------- LIGHT MODE (DEFAULT) ---------- */
+body {
+  background: #eef2f5;
+  padding: 28px;
+  transition: 0.3s;
+}
 
-  .dashboard {
-    max-width: 1500px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 28px;
-  }
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
 
-  .creator-section {
-    flex: 2.2;
-    min-width: 340px;
-  }
+.dashboard {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
 
-  .right-panel {
-    flex: 1.4;
-    min-width: 310px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
+.left {
+  flex: 2;
+  min-width: 300px;
+}
 
-  /* Cards (mismo estilo pero más limpio) */
-  .card-glass {
-    background: #ffffff;
-    border-radius: 24px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    padding: 1.6rem;
-    border: 1px solid #e3e8ef;
-  }
+.right {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e2f4b;
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-left: 4px solid #f5a623;
-    padding-left: 14px;
-  }
+h2 {
+  border-left: 5px solid #f5a623;
+  padding-left: 10px;
+  margin-bottom: 15px;
+  color: #1e2f4b;
+}
 
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px 20px;
-  }
+label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
 
-  .full-width {
-    grid-column: span 2;
-  }
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #d1d9e6;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
 
-  label {
-    font-weight: 600;
-    font-size: 0.8rem;
-    color: #374151;
-    margin-bottom: 5px;
-    display: block;
-  }
+button {
+  background: #1e3c72;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
-  input, select {
-    width: 100%;
-    padding: 11px 14px;
-    border-radius: 14px;
-    border: 1px solid #d1d9e6;
-    background: #f9fbfd;
-    font-size: 0.95rem;
-    transition: 0.2s;
-  }
+button:hover {
+  background: #f5a623;
+}
 
-  input:focus, select:focus {
-    border-color: #f5a623;
-    box-shadow: 0 0 0 2px rgba(245,166,35,0.15);
-    outline: none;
-  }
+.cart {
+  background: #f4f7fb;
+  padding: 10px;
+  border-radius: 12px;
+}
 
-  button {
-    background: #1e3c72;
-    color: white;
-    border: none;
-    padding: 11px;
-    border-radius: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+/* ---------- DARK MODE ---------- */
+body.dark {
+  background: #0f172a;
+}
 
-  button:hover {
-    background: #f5a623;
-  }
+body.dark .card {
+  background: #1e293b;
+  color: white;
+}
 
-  .cart-items {
-    background: #f4f7fb;
-    border-radius: 14px;
-    padding: 12px;
-    margin: 10px 0;
-  }
+body.dark h2 {
+  color: #fbbf24;
+}
 
-  .cart-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid #e5eaf2;
-    font-size: 0.9rem;
-  }
+body.dark input,
+body.dark select {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: white;
+}
 
-  .badge-total {
-    background: #f5a62320;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-weight: bold;
-  }
+body.dark .cart {
+  background: #020617;
+}
 
-  .order-item {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-left: 4px solid #f5a623;
-    cursor: pointer;
-    transition: 0.15s;
-  }
+body.dark button {
+  background: #f5a623;
+  color: black;
+}
 
-  .order-item:hover {
-    background: #fff7ec;
-  }
+body.dark button:hover {
+  background: #fbbf24;
+}
 
-  .chip {
-    background: #eef2ff;
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-size: 0.75rem;
-  }
+/* toggle button */
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: black;
+  color: white;
+  border-radius: 20px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
 
-  .hidden {
-    display: none;
-  }
-
-  @media (max-width: 750px) {
-    .form-grid {
-      grid-template-columns: 1fr;
-    }
-    .full-width {
-      grid-column: span 1;
-    }
-  }
 </style>
 </head>
 
 <body>
 
+<div class="toggle-btn" onclick="toggleDark()">
+  🌙 / ☀️
+</div>
+
 <div class="dashboard">
 
-  <!-- CREAR PEDIDO -->
-  <div class="creator-section">
-    <div class="card">
-      <h2><i class="fas fa-hard-hat"></i> Halcon Express</h2>
+<!-- LEFT -->
+<div class="left card">
+<h2><i class="fas fa-hard-hat"></i> Halcon Express</h2>
 
-      <div class="form-grid">
-        <div>
-          <label>Nombre</label>
-          <input id="custName">
-        </div>
+<label>Nombre</label>
+<input id="name">
 
-        <div>
-          <label>Teléfono</label>
-          <input id="custPhone">
-        </div>
+<label>Teléfono</label>
+<input id="phone">
 
-        <div class="full-width">
-          <label>Material</label>
-          <select id="productSelect">
-            <option value="">Selecciona</option>
-            <option value="200" data-name="Cement">Cemento - $200</option>
-            <option value="15" data-name="Brick">Ladrillo - $15</option>
-          </select>
-        </div>
+<label>Material</label>
+<select id="material">
+  <option value="200">Cemento - $200</option>
+  <option value="15">Ladrillo - $15</option>
+</select>
 
-        <div>
-          <label>Cantidad</label>
-          <input id="qtyInput" type="number">
-        </div>
+<label>Cantidad</label>
+<input id="qty" type="number">
 
-        <div class="full-width">
-          <button onclick="addItem()">Agregar</button>
-        </div>
-      </div>
+<button onclick="add()">Agregar</button>
 
-      <div class="cart-items" id="cartArea">Carrito vacío</div>
+<div class="cart" id="cart">Carrito vacío</div>
 
-      <button onclick="createOrder()">Crear pedido</button>
+<button onclick="createOrder()">Crear pedido</button>
 
-      <div id="msg"></div>
-    </div>
-  </div>
+<p id="msg"></p>
+</div>
 
-  <!-- PANEL DERECHO -->
-  <div class="right-panel">
+<!-- RIGHT -->
+<div class="right">
 
-    <div class="card">
-      <h2>Pedidos</h2>
-      <div id="orders"></div>
-    </div>
+<div class="card">
+<h2>Pedidos</h2>
+<div id="orders">Sin pedidos</div>
+</div>
 
-    <div class="card">
-      <h2>Buscar</h2>
-      <input id="search">
-      <button onclick="search()">Buscar</button>
-      <div id="result"></div>
-    </div>
+<div class="card">
+<h2>Buscar</h2>
+<input id="search">
+<button onclick="searchOrder()">Buscar</button>
+<p id="result"></p>
+</div>
 
-  </div>
-
+</div>
 </div>
 
 <script>
 let cart = [];
 let orders = [];
+let id = 100;
 
-function addItem() {
-  const select = document.getElementById("productSelect");
-  const qty = document.getElementById("qtyInput").value;
+function add() {
+  let mat = document.getElementById("material");
+  let qty = document.getElementById("qty").value;
 
-  if (!select.value || !qty) return;
+  if (!qty) return;
 
-  cart.push({
-    name: select.options[select.selectedIndex].text,
-    qty: qty
-  });
+  let name = mat.options[mat.selectedIndex].text;
+  let price = mat.value;
 
+  cart.push({name, qty, price});
   renderCart();
 }
 
 function renderCart() {
-  const area = document.getElementById("cartArea");
-
+  let c = document.getElementById("cart");
   if (cart.length === 0) {
-    area.innerHTML = "Carrito vacío";
+    c.innerHTML = "Carrito vacío";
     return;
   }
 
-  area.innerHTML = "";
-
-  cart.forEach(item => {
-    area.innerHTML += `<div>${item.name} x ${item.qty}</div>`;
-  });
+  c.innerHTML = cart.map(i =>
+    `${i.name} x${i.qty}`
+  ).join("<br>");
 }
 
 function createOrder() {
-  const name = document.getElementById("custName").value;
-
+  let name = document.getElementById("name").value;
   if (!name || cart.length === 0) return;
 
-  const order = {
-    id: "HAL-" + Math.floor(Math.random()*1000),
-    name,
-    cart: [...cart]
-  };
+  let folio = "HAL-" + id++;
+  orders.push({folio, name});
 
-  orders.push(order);
-
-  document.getElementById("msg").innerText = "Pedido creado";
+  document.getElementById("msg").innerText = "Pedido creado: " + folio;
 
   cart = [];
   renderCart();
@@ -294,26 +239,30 @@ function createOrder() {
 }
 
 function renderOrders() {
-  const div = document.getElementById("orders");
+  let o = document.getElementById("orders");
 
-  div.innerHTML = "";
-
-  orders.forEach(o => {
-    div.innerHTML += `<div class="order-item">${o.id} - ${o.name}</div>`;
-  });
-}
-
-function search() {
-  const val = document.getElementById("search").value;
-
-  const order = orders.find(o => o.id === val);
-
-  if (!order) {
-    document.getElementById("result").innerText = "No encontrado";
+  if (orders.length === 0) {
+    o.innerHTML = "Sin pedidos";
     return;
   }
 
-  document.getElementById("result").innerText = order.name;
+  o.innerHTML = orders.map(x =>
+    `${x.folio} - ${x.name}`
+  ).join("<br>");
+}
+
+function searchOrder() {
+  let f = document.getElementById("search").value;
+
+  let found = orders.find(o => o.folio === f);
+
+  document.getElementById("result").innerText =
+    found ? "Encontrado" : "No encontrado";
+}
+
+/* DARK MODE */
+function toggleDark() {
+  document.body.classList.toggle("dark");
 }
 </script>
 
